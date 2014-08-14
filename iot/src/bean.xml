@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="GBK"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="sessionFactory"  class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+       	<property name="configLocation" value="classpath:hibernate.cfg.xml"></property>
+    </bean>
+    
+       <bean id="hibernateTemplete" class="org.springframework.orm.hibernate3.HibernateTemplate">
+         <property name="sessionFactory" ref="sessionFactory"></property>
+     </bean>
+     
+    <!-- 配置事务 -->
+	<bean id="htm"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="ti" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager">
+			<ref bean="htm" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<!-- key:方法名称 -->
+				<prop key="insert*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="load*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="query*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+    
+    
+    
+	
+	<bean name="person" class="com.zhang.test.Person">
+	  <property name="name" value="张洪斌"/>
+	</bean>
+</beans>
